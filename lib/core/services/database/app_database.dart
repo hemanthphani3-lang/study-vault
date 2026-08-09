@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
@@ -63,9 +64,11 @@ class AppDatabase extends _$AppDatabase {
       beforeOpen: (OpeningDetails details) async {
         // Enforce SQLite integrity, WAL mode for concurrent reads, and performance pragmas
         await customStatement('PRAGMA foreign_keys = ON;');
-        await customStatement('PRAGMA journal_mode = WAL;');
-        await customStatement('PRAGMA synchronous = NORMAL;');
-        await customStatement('PRAGMA cache_size = -64000;'); // 64MB cache for large dataset querying
+        if (!kIsWeb) {
+          await customStatement('PRAGMA journal_mode = WAL;');
+          await customStatement('PRAGMA synchronous = NORMAL;');
+          await customStatement('PRAGMA cache_size = -64000;'); // 64MB cache for large dataset querying
+        }
       },
     );
   }
