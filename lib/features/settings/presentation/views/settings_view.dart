@@ -291,7 +291,6 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                     ),
                     Switch(
                       value: settings.enablePeerDiscovery,
-                      activeThumbColor: AppColors.primary,
                       activeTrackColor: AppColors.primary.withValues(alpha: 0.35),
                       onChanged: (bool val) {
                         ref.read(settingsProvider.notifier).togglePeerDiscovery(val);
@@ -337,7 +336,6 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
                     ),
                     Switch(
                       value: settings.enableBackgroundSync,
-                      activeThumbColor: AppColors.primary,
                       activeTrackColor: AppColors.primary.withValues(alpha: 0.35),
                       onChanged: (bool val) {
                         ref.read(settingsProvider.notifier).toggleBackgroundSync(val);

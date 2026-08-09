@@ -223,7 +223,6 @@ class _NetworkViewState extends ConsumerState<NetworkView> {
                     ),
                     Switch(
                       value: _isSeedingEnabled,
-                      activeThumbColor: AppColors.primary,
                       activeTrackColor: AppColors.primary.withValues(alpha: 0.35),
                       onChanged: (bool val) {
                         setState(() {
