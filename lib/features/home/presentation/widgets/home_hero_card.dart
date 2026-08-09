@@ -11,9 +11,13 @@ import '../../../../core/widgets/cards/glass_card.dart';
 class HomeHeroCard extends StatelessWidget {
   const HomeHeroCard({
     super.key,
+    this.seederCount = '0',
+    this.indexedCount = '0',
     this.onExploreTap,
   });
 
+  final String seederCount;
+  final String indexedCount;
   final VoidCallback? onExploreTap;
 
   @override
@@ -72,21 +76,22 @@ class HomeHeroCard extends StatelessWidget {
             ),
           ),
           AppSpacing.gapH20,
-          const Row(
+          Row(
             children: <Widget>[
               _StatPill(
-                label: 'Verified Seeders',
-                value: '1.4k+',
+                label: 'Active Seeders',
+                value: seederCount,
                 icon: AppIcons.peers,
               ),
               AppSpacing.gapW12,
               _StatPill(
                 label: 'Indexed Items',
-                value: '280k',
+                value: indexedCount,
                 icon: AppIcons.document,
               ),
             ],
           ),
+
           if (onExploreTap != null) ...<Widget>[
             AppSpacing.gapH20,
             GlassButton(

@@ -13,11 +13,12 @@ class NetworkStatusCard extends StatelessWidget {
   const NetworkStatusCard({
     super.key,
     this.status = NetworkStatus.online,
-    this.connectedPeers = 38,
-    this.latencyMs = 28,
-    this.bandwidthFormatted = '1.8 MB/s',
+    this.connectedPeers = 0,
+    this.latencyMs = 0,
+    this.bandwidthFormatted = '0 KB/s',
     this.onTap,
   });
+
 
   final NetworkStatus status;
   final int connectedPeers;

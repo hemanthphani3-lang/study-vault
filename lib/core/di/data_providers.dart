@@ -80,8 +80,10 @@ final Provider<IDownloadRepository> downloadRepositoryProvider = Provider<IDownl
 
 final Provider<ISearchRepository> searchRepositoryProvider = Provider<ISearchRepository>((Ref ref) {
   final ILocalDataSource localSource = ref.watch(localDataSourceProvider);
-  return SearchRepositoryImpl(localSource);
+  final IRemoteDataSource remoteSource = ref.watch(remoteDataSourceProvider);
+  return SearchRepositoryImpl(localSource, remoteSource);
 });
+
 
 final Provider<ISettingsRepository> settingsRepositoryProvider = Provider<ISettingsRepository>((Ref ref) {
   final ILocalDataSource localSource = ref.watch(localDataSourceProvider);

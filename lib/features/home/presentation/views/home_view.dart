@@ -80,7 +80,7 @@ class HomeView extends ConsumerWidget {
         children: <Widget>[
           // Hero Search Trigger
           AppSearchBar(
-            hintText: 'Search 280k+ papers, books, datasets...',
+            hintText: 'Search research papers, books, datasets...',
             readOnly: true,
             onTap: () => context.goNamed(AppRoutes.searchName),
             onSubmitted: (_) => context.goNamed(AppRoutes.searchResultsName),
@@ -88,7 +88,12 @@ class HomeView extends ConsumerWidget {
           AppSpacing.gapH20,
 
           // Knowledge Network Mesh Status
-          const NetworkStatusCard(),
+          NetworkStatusCard(
+            status: state.networkStatus,
+            connectedPeers: state.connectedPeersCount,
+            latencyMs: 0,
+            bandwidthFormatted: '0 KB/s',
+          ),
           AppSpacing.gapH20,
 
           // Quick Actions Row
@@ -102,27 +107,32 @@ class HomeView extends ConsumerWidget {
 
           // Hero Feature Banner
           HomeHeroCard(
+            seederCount: '${state.connectedPeersCount}',
+            indexedCount: '${state.featuredResources.length}',
             onExploreTap: () => context.goNamed(AppRoutes.searchName),
           ),
           AppSpacing.gapH24,
 
           // Continue Reading Section
-          SectionHeader(
-            title: 'Continue Reading',
-            subtitle: 'Pick up where you left off in your vault',
-            actionLabel: 'View Library',
-            onAction: () => context.goNamed(AppRoutes.libraryName),
-          ),
-          AppSpacing.gapH12,
-          HomeContinueReadingCard(
-            title: 'Distributed Consensus & ZK-Rollups in Academic Archives',
-            authors: const <String>['Dr. Elena Vance', 'Prof. Marcus Chen'],
-            progress: 0.68,
-            currentPage: 142,
-            totalPages: 210,
-            onContinue: () => context.pushNamed(AppRoutes.resourceDetailsName),
-          ),
-          AppSpacing.gapH24,
+          if (state.featuredResources.isNotEmpty) ...<Widget>[
+            SectionHeader(
+              title: 'Continue Reading',
+              subtitle: 'Pick up where you left off in your vault',
+              actionLabel: 'View Library',
+              onAction: () => context.goNamed(AppRoutes.libraryName),
+            ),
+            AppSpacing.gapH12,
+            HomeContinueReadingCard(
+              title: state.featuredResources.first.title,
+              authors: state.featuredResources.first.authors,
+              progress: 0.1,
+              currentPage: 1,
+              totalPages: 50,
+              onContinue: () => context.pushNamed(AppRoutes.resourceDetailsName),
+            ),
+            AppSpacing.gapH24,
+          ],
+
 
           // Academic Categories Grid
           SectionHeader(

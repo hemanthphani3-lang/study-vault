@@ -85,8 +85,8 @@ void main() {
       notifier = SearchNotifier(mockRepo);
     });
 
-    test('Initial state contains default mock results and recents', () {
-      expect(notifier.state.results.isNotEmpty, isTrue);
+    test('Initial state contains empty results and idle status', () {
+      expect(notifier.state.results.isEmpty, isTrue);
       expect(notifier.state.status, equals(SearchStatus.idle));
     });
 

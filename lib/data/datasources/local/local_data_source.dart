@@ -17,6 +17,8 @@ import '../../models/research_paper_model.dart';
 import '../../models/resource_model.dart';
 import '../../models/search_history_model.dart';
 import '../../models/settings_model.dart';
+import '../../../shared/enums/resource_type.dart';
+
 
 /// Clean interface for all local database queries, streams, transactions, and mutations.
 abstract interface class ILocalDataSource {
@@ -39,6 +41,7 @@ abstract interface class ILocalDataSource {
   // Unified Resources
   Future<List<ResourceModel>> getAllResources({int limit = 100, int offset = 0, String? query});
   Future<ResourceModel?> getResourceById(String id);
+  Future<void> insertResource(ResourceModel resource);
 
   // Notes
   Future<List<NoteModel>> getNotes({String? resourceId});
@@ -394,6 +397,43 @@ class LocalDataSourceImpl implements ILocalDataSource {
     }
 
     return list;
+  }
+
+  @override
+  Future<void> insertResource(ResourceModel resource) async {
+    // Route to the correct underlying table based on resource type
+    if (resource.type == ResourceType.book) {
+      await saveBook(BookModel(
+        id: resource.id,
+        title: resource.title,
+        subtitle: resource.subtitle,
+        authors: resource.authors,
+        publicationYear: resource.publicationYear,
+        doi: resource.doi,
+        format: resource.format,
+        sizeBytes: resource.sizeBytes,
+        cid: resource.cid,
+        contentHash: resource.contentHash,
+        categoryId: resource.categoryId,
+        peerSeeders: resource.peerSeeders,
+        verificationTier: resource.verificationTier.name,
+      ));
+    } else {
+      await saveResearchPaper(ResearchPaperModel(
+        id: resource.id,
+        title: resource.title,
+        authors: resource.authors,
+        publicationYear: resource.publicationYear,
+        doi: resource.doi,
+        format: resource.format,
+        sizeBytes: resource.sizeBytes,
+        cid: resource.cid,
+        contentHash: resource.contentHash,
+        categoryId: resource.categoryId,
+        peerSeeders: resource.peerSeeders,
+        verificationTier: resource.verificationTier.name,
+      ));
+    }
   }
 
   @override
