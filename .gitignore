@@ -28,7 +28,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-*.g.dart
+# *.g.dart
+!lib/core/services/database/app_database.g.dart
 
 # Python & Cache related
 __pycache__/
