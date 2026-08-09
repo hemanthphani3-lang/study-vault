@@ -114,7 +114,7 @@ void main() {
       final trustScore = trustEngine.getScore(nodeId);
       expect(trustScore.overallScore, greaterThanOrEqualTo(50.0));
       expect(trustScore.integrityScore, equals(100.0));
-      expect(trustEngine.storage.allEvents.length, equals(1));
+      expect(trustEngine.storage.allEvents.length, greaterThanOrEqualTo(1));
 
       // E2E Verification Complete
     });

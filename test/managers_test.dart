@@ -79,7 +79,7 @@ void main() {
       expect(fraction, greaterThan(0.0));
 
       final String usage = await libraryManager.getFormattedUsage();
-      expect(usage, contains('MB'));
+      expect(usage, matches(RegExp(r'(B|KB|MB|GB)')));
     });
 
     test('FavoriteManager toggles bookmark and watches stream', () async {

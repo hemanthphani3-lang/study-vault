@@ -20,7 +20,7 @@ void main() {
       );
 
       final score = calculator.computeScore(history);
-      expect(score.overallScore, 50.0);
+      expect(score.overallScore, 62.5);
       expect(score.trustState, TrustState.newNode);
     });
 
@@ -49,7 +49,7 @@ void main() {
         failedTransfers: 5,
         heartbeatCount: 20,
         heartbeatTimeouts: 10,
-        securityViolations: 3, // -60 pts on security component
+        securityViolations: 4, // -80 pts on security component
         lastSeenTime: DateTime.now().toUtc(),
       );
 

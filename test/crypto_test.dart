@@ -26,7 +26,7 @@ void main() {
     test('toHex and fromHex conversion is lossless', () {
       final Uint8List original = Uint8List.fromList(<int>[0x01, 0xAB, 0xCD, 0xEF, 0xFF]);
       final String hex = Sha256Helper.toHex(original);
-      expect(hex, '01abcdef');
+      expect(hex, '01abcdefff');
       final Uint8List parsed = Sha256Helper.fromHex(hex);
       expect(parsed, equals(original));
     });

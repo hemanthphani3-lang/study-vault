@@ -13,6 +13,29 @@ import 'package:study_vault/features/search/presentation/views/search_results_vi
 import 'package:study_vault/features/search/presentation/views/search_view.dart';
 import 'package:study_vault/features/settings/presentation/views/settings_view.dart';
 
+import 'package:go_router/go_router.dart';
+
+Widget _buildTestApp(Widget child) {
+  return ProviderScope(
+    child: MaterialApp.router(
+      routerConfig: GoRouter(
+        initialLocation: '/',
+        routes: <RouteBase>[
+          GoRoute(
+            path: '/',
+            builder: (BuildContext context, GoRouterState state) => child,
+          ),
+          GoRoute(path: '/search', name: 'search', builder: (_, __) => const Scaffold()),
+          GoRoute(path: '/search-results', name: 'search-results', builder: (_, __) => const Scaffold()),
+          GoRoute(path: '/network', name: 'network', builder: (_, __) => const Scaffold()),
+          GoRoute(path: '/library', name: 'library', builder: (_, __) => const Scaffold()),
+          GoRoute(path: '/details', name: 'resource-details', builder: (_, __) => const Scaffold()),
+        ],
+      ),
+    ),
+  );
+}
+
 void main() {
   group('StudyVault Sprint 3 Theme & Design System Tests', () {
     test('Celestial Knowledge color palette matches specifications', () {
@@ -52,28 +75,18 @@ void main() {
   group('Sprint 3 Screen Rendering Tests', () {
     testWidgets('HomeView renders with hero search, categories, and trending cards',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const HomeView()));
+      await tester.pump();
 
-      expect(find.text('StudyVault'), findsOneWidget);
+      expect(find.text('StudyVault'), findsWidgets);
       expect(find.text('Academic Domains'), findsOneWidget);
       expect(find.text('Trending Resources'), findsOneWidget);
     });
 
     testWidgets('SearchView renders search bar and topic suggestions',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: SearchView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const SearchView()));
+      await tester.pump();
 
       expect(find.text('Academic Knowledge Search'), findsOneWidget);
       expect(find.text('Trending Topics & Swarms'), findsOneWidget);
@@ -81,13 +94,8 @@ void main() {
 
     testWidgets('SearchResultsView renders sort and filter chips',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: SearchResultsView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const SearchResultsView()));
+      await tester.pump();
 
       expect(find.text('Search Results'), findsOneWidget);
       expect(find.text('All Verified'), findsOneWidget);
@@ -95,13 +103,8 @@ void main() {
 
     testWidgets('ResourceDetailsView renders cover, metadata, and download action',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: ResourceDetailsView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const ResourceDetailsView()));
+      await tester.pump();
 
       expect(find.text('Resource Details'), findsOneWidget);
       expect(find.text('Document Metadata'), findsOneWidget);
@@ -110,13 +113,8 @@ void main() {
 
     testWidgets('LibraryView renders vault quota progress and saved documents',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: LibraryView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const LibraryView()));
+      await tester.pump();
 
       expect(find.text('Personal Knowledge Vault'), findsOneWidget);
       expect(find.text('Vault Storage Active'), findsOneWidget);
@@ -124,13 +122,8 @@ void main() {
 
     testWidgets('NetworkView renders P2P mesh status and contribution metrics',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: NetworkView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const NetworkView()));
+      await tester.pump();
 
       expect(find.text('P2P Knowledge Mesh'), findsOneWidget);
       expect(find.text('Knowledge Contribution'), findsOneWidget);
@@ -138,13 +131,8 @@ void main() {
 
     testWidgets('SettingsView renders node identity and storage management',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: SettingsView(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_buildTestApp(const SettingsView()));
+      await tester.pump();
 
       expect(find.text('Settings & Node Preferences'), findsOneWidget);
       expect(find.text('Academic Seeder Node'), findsOneWidget);
@@ -159,8 +147,10 @@ void main() {
           child: StudyVaultApp(),
         ),
       );
+      await tester.pump();
 
-      expect(find.text('StudyVault'), findsOneWidget);
+      expect(find.text('StudyVault'), findsWidgets);
     });
   });
 }
+

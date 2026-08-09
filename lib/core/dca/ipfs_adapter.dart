@@ -9,13 +9,23 @@ import 'pin_manager.dart';
 /// IPFS Storage Adapter implementing [DcaInterface].
 /// Encapsulates IPFS node interaction and local DCA content storage.
 class IpfsAdapter implements DcaInterface {
-  IpfsAdapter({
+  factory IpfsAdapter({
     CidManager? cidManager,
     PinManager? pinManager,
     LocalContentRegistry? registry,
-  })  : _cidManager = cidManager ?? CidManager(),
-        _registry = registry ?? LocalContentRegistry(),
-        _pinManager = pinManager ?? PinManager(registry: registry);
+  }) {
+    final LocalContentRegistry effectiveRegistry =
+        registry ?? pinManager?.registry ?? LocalContentRegistry();
+    final PinManager effectivePinManager =
+        pinManager ?? PinManager(registry: effectiveRegistry);
+    return IpfsAdapter._(
+      cidManager ?? CidManager(),
+      effectiveRegistry,
+      effectivePinManager,
+    );
+  }
+
+  IpfsAdapter._(this._cidManager, this._registry, this._pinManager);
 
   final CidManager _cidManager;
   final LocalContentRegistry _registry;
