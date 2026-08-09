@@ -21,7 +21,7 @@ dependencies:
 
   # Local SQLite Persistence
   drift: ^2.18.0
-  drift_flutter: ^0.1.0
+  drift_flutter: ^0.3.1
 
   # Typography & Design System
   google_fonts: ^6.2.1
