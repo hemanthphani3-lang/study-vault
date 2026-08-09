@@ -18,6 +18,7 @@ import '../../../../domain/search/models/search_sort_option.dart';
 import '../../../../shared/enums/verification_tier.dart';
 import '../../../../shared/models/resource_preview.dart';
 import '../providers/search_provider.dart';
+import '../widgets/pipeline_status_widget.dart';
 
 /// Comprehensive Search Results view with sorting, filtering, and peer seeder telemetry.
 class SearchResultsView extends ConsumerStatefulWidget {
@@ -153,6 +154,18 @@ class _SearchResultsViewState extends ConsumerState<SearchResultsView> {
           vertical: AppSpacing.md,
         ),
         children: <Widget>[
+          // Pipeline status — shown whenever pipeline is active
+          if (searchState.pipelineStage != PipelineStage.idle)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: PipelineStatusWidget(
+                stage: searchState.pipelineStage,
+                message: searchState.pipelineMessage,
+                providersSearched: searchState.providersSearched,
+                docsIndexed: searchState.docsIndexed,
+              ),
+            ),
+
           // Active Filter Chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -220,19 +233,22 @@ class _SearchResultsViewState extends ConsumerState<SearchResultsView> {
           AppSpacing.gapH16,
 
           // Search Result Cards / Loading / Empty
-          if (searchState.status == SearchStatus.loading)
+          if (searchState.status == SearchStatus.loading &&
+              searchState.pipelineStage != PipelineStage.idle &&
+              searchState.results.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
               child: Center(
                 child: CircularProgressIndicator(color: AppColors.primary),
               ),
             )
-          else if (searchState.results.isEmpty)
+          else if (searchState.results.isEmpty &&
+              searchState.pipelineStage == PipelineStage.idle)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
               child: EmptyStateWidget(
-                title: 'No Matching Resources Found',
-                description: 'Try adjusting filters or searching for different academic keywords or authors.',
+                title: 'No Results Found Anywhere',
+                description: 'All academic repositories were searched. Try different keywords or check your connection.',
               ),
             )
           else

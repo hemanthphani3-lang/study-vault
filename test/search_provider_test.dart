@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:study_vault/core/network/api_client.dart';
 import 'package:study_vault/data/models/resource_model.dart';
 import 'package:study_vault/data/models/search_history_model.dart';
 import 'package:study_vault/domain/repositories/search_repository.dart';
@@ -8,6 +9,7 @@ import 'package:study_vault/domain/search/models/search_sort_option.dart';
 import 'package:study_vault/features/search/presentation/providers/search_provider.dart';
 import 'package:study_vault/shared/enums/resource_type.dart';
 import 'package:study_vault/shared/enums/verification_tier.dart';
+
 
 class MockSearchRepository implements ISearchRepository {
   final List<String> recentSearches = <String>['zkSNARK', 'Transformer'];
@@ -82,7 +84,7 @@ void main() {
 
     setUp(() {
       mockRepo = MockSearchRepository();
-      notifier = SearchNotifier(mockRepo);
+      notifier = SearchNotifier(mockRepo, ApiClient());
     });
 
     test('Initial state contains empty results and idle status', () {

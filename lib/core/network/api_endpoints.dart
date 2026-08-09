@@ -25,4 +25,10 @@ abstract final class ApiEndpoints {
   static const String scraperJobs = '$_v1/scraper/jobs';
   static const String trackerAnnounce = '$_v1/tracker/announce';
   static const String nodesSync = '$_v1/nodes/sync';
+
+  // ─── Auto-Retrieval Pipeline ───────────────────────────────────────────────
+  static const String pipelineSearch = '$_v1/pipeline/search';
+  static String pipelineStatus(String jobId) => '$_v1/pipeline/status/$jobId';
+  static const String vaultStats = '$_v1/pipeline/vault/stats';
 }
+

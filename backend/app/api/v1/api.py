@@ -13,6 +13,7 @@ from app.api.v1.endpoints import (
     tracker,
     trust,
     version,
+    pipeline,
 )
 
 api_router = APIRouter()
@@ -30,3 +31,4 @@ api_router.include_router(dca.router, tags=["Distributed Content Addressing (DCA
 api_router.include_router(sharing.router, tags=["Content Sharing Protocol (SVCS)"])
 api_router.include_router(trust.router, tags=["StudyVault Trust Framework (SVTF)"])
 api_router.include_router(placeholders.router, tags=["Future Contracts & Swarms"])
+api_router.include_router(pipeline.router)
