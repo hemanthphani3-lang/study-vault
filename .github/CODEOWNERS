@@ -1,0 +1,14 @@
+# StudyVault Code Owners
+
+# Global Maintainers
+* @studyvault-core-team
+
+# Protocol Specs & Documentation
+/docs/ @studyvault-core-team
+
+# Flutter Mobile Application
+/lib/ @studyvault-mobile-team
+
+# FastAPI Backend & Tracker Services
+/backend/ @studyvault-backend-team
+/services/tracker/ @studyvault-backend-team
