@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State of the splash screen bootstrap initialization.
@@ -9,14 +10,26 @@ class SplashNotifier extends StateNotifier<SplashStatus> {
     _initialize();
   }
 
-  Future<void> _initialize() async {
-    // Scaffold for future bootstrap routines (DB migrations, P2P keyring validation)
-    await Future<void>.delayed(const Duration(milliseconds: 1800));
-    state = SplashStatus.ready;
+  Timer? _timer;
+
+  void _initialize() {
+    _timer = Timer(const Duration(milliseconds: 1800), () {
+      if (mounted) {
+        state = SplashStatus.ready;
+      }
+    });
   }
 
   void markComplete() {
-    state = SplashStatus.complete;
+    if (mounted) {
+      state = SplashStatus.complete;
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
 
@@ -24,3 +37,4 @@ final StateNotifierProvider<SplashNotifier, SplashStatus> splashProvider =
     StateNotifierProvider<SplashNotifier, SplashStatus>(
   (Ref ref) => SplashNotifier(),
 );
+

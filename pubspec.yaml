@@ -37,6 +37,10 @@ dev_dependencies:
   drift_dev: ^2.18.0
   build_runner: ^2.4.9
 
+dependency_overrides:
+  objective_c:
+    path: stubs/objective_c
+
 flutter:
   uses-material-design: true
   assets:

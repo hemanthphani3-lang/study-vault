@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:study_vault/core/crypto/ed25519.dart';
+import 'package:study_vault/core/crypto/sha256_helper.dart';
 import 'package:study_vault/core/dca/cid_manager.dart';
 import 'package:study_vault/core/dca/ipfs_adapter.dart';
 import 'package:study_vault/core/dca/local_content_registry.dart';
@@ -23,8 +25,13 @@ void main() {
       // -----------------------------------------------------------------------
       // Step 1: SVIP Node Identity & Security Keys
       // -----------------------------------------------------------------------
+      final keyPair = Ed25519.generateKeyPair();
       const nodeId = 'node_e2e_tester_01';
-      expect(nodeId.isNotEmpty, isTrue);
+      final fingerprint = Sha256Helper.computeFingerprint(keyPair.publicKeyHex);
+      final now = DateTime.now().toUtc();
+      final nonce = 'nonce_e2e_${DateTime.now().microsecondsSinceEpoch}';
+      final challenge = '$nodeId:${now.toIso8601String()}:$nonce';
+      final signatureHex = Ed25519.signMessage(challenge, keyPair);
 
       // -----------------------------------------------------------------------
       // Step 2: SVSG Zero Trust Authorization Gate Evaluation
@@ -33,11 +40,11 @@ void main() {
       final securityService = SecurityGatewayService(apiClient: client);
       final authRequest = SecurityAuthRequest(
         nodeId: nodeId,
-        publicKeyHex: 'ed25519_pk_sample_hex_string_key_01',
-        fingerprint: 'fp_sample_sha256_hex_fingerprint_01',
-        signatureHex: 'sig_sample_ed25519_digital_signature_hex',
-        timestamp: DateTime.now().toUtc(),
-        nonce: 'nonce_e2e_${DateTime.now().microsecondsSinceEpoch}',
+        publicKeyHex: keyPair.publicKeyHex,
+        fingerprint: fingerprint,
+        signatureHex: signatureHex,
+        timestamp: now,
+        nonce: nonce,
         metadataId: 'res_quantum_e2e',
         targetPeerId: 'peer_target_seeder_01',
         fileSizeBytes: 1048576,

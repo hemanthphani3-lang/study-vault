@@ -23,7 +23,10 @@ Widget _buildTestApp(Widget child) {
         routes: <RouteBase>[
           GoRoute(
             path: '/',
-            builder: (BuildContext context, GoRouterState state) => child,
+            builder: (BuildContext context, GoRouterState state) => MediaQuery(
+              data: const MediaQueryData(size: Size(800, 2400)),
+              child: child,
+            ),
           ),
           GoRoute(path: '/search', name: 'search', builder: (_, __) => const Scaffold()),
           GoRoute(path: '/search-results', name: 'search-results', builder: (_, __) => const Scaffold()),
@@ -75,6 +78,10 @@ void main() {
   group('Sprint 3 Screen Rendering Tests', () {
     testWidgets('HomeView renders with hero search, categories, and trending cards',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(_buildTestApp(const HomeView()));
       await tester.pump();
 
@@ -85,6 +92,10 @@ void main() {
 
     testWidgets('SearchView renders search bar and topic suggestions',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
       await tester.pumpWidget(_buildTestApp(const SearchView()));
       await tester.pump();
 
@@ -147,10 +158,11 @@ void main() {
           child: StudyVaultApp(),
         ),
       );
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 2000));
 
       expect(find.text('StudyVault'), findsWidgets);
     });
   });
 }
+
 

@@ -49,7 +49,9 @@ void main() {
         failedTransfers: 5,
         heartbeatCount: 20,
         heartbeatTimeouts: 10,
-        securityViolations: 4, // -80 pts on security component
+        integritySuccesses: 0,
+        integrityFailures: 5,
+        securityViolations: 3, // -60 pts on security component
         lastSeenTime: DateTime.now().toUtc(),
       );
 
