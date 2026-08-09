@@ -6,7 +6,6 @@ import '../../../../domain/search/models/search_filter.dart';
 import '../../../../domain/search/models/search_result_item.dart';
 import '../../../../domain/search/models/search_sort_option.dart';
 import '../../../../shared/enums/resource_type.dart';
-import '../../../../shared/enums/verification_tier.dart';
 import '../../../../shared/models/resource_preview.dart';
 
 /// Search engine lifecycle and execution status.
@@ -50,81 +49,21 @@ class SearchState {
   bool get isSearching => status == SearchStatus.loading;
   ResourceType? get selectedFilter => filter.resourceType;
 
-  static const List<ResourcePreview> defaultMockResults = <ResourcePreview>[
-    ResourcePreview(
-      id: 'sv-res-001',
-      title: 'Decentralized Academic Storage: Zero-Knowledge Verification Networks',
-      authors: <String>['Dr. Elena Vance', 'Prof. Marcus Chen'],
-      year: 2026,
-      type: ResourceType.paper,
-      verificationTier: VerificationTier.verified,
-      sizeBytes: 14680064,
-      peerSeeders: 142,
-      cid: 'bafybeic5zkrollup73d9f4a',
-      isDownloaded: true,
-    ),
-    ResourcePreview(
-      id: 'sv-res-002',
-      title: 'Transformer Architecture Memory Footprint Benchmarking',
-      authors: <String>['AI Research Collective'],
-      year: 2025,
-      type: ResourceType.dataset,
-      verificationTier: VerificationTier.peerReviewed,
-      sizeBytes: 524288000,
-      peerSeeders: 89,
-      cid: 'bafybeitransformerbench334a',
-      isDownloaded: false,
-    ),
-    ResourcePreview(
-      id: 'sv-res-003',
-      title: 'CRISPR-Cas12 Genomic Sequencing Dataset v4.2',
-      authors: <String>['Global Bioinformatics Initiative'],
-      year: 2026,
-      type: ResourceType.dataset,
-      verificationTier: VerificationTier.verified,
-      sizeBytes: 1048576000,
-      peerSeeders: 310,
-      cid: 'bafybeicrisprcas12dataset91b',
-      isDownloaded: false,
-    ),
-    ResourcePreview(
-      id: 'sv-res-004',
-      title: 'Quantum Error Correction with Surface Codes',
-      authors: <String>['Prof. David Thorne'],
-      year: 2026,
-      type: ResourceType.book,
-      verificationTier: VerificationTier.verified,
-      sizeBytes: 28311552,
-      peerSeeders: 64,
-      cid: 'bafybeiquantumerrorcorr551c',
-      isDownloaded: true,
-    ),
-  ];
+  static const List<ResourcePreview> defaultMockResults = <ResourcePreview>[];
 
   static const SearchState initial = SearchState(
     query: '',
     filter: SearchFilter.empty,
     sortOption: SearchSortOption.mostRelevant,
-    results: defaultMockResults,
-    recentSearches: <String>[
-      'Decentralized zkSNARK systems',
-      'Transformer architecture memory footprint',
-      'CRISPR CAS-12 sequencing datasets',
-      'Distributed consensus fault tolerance',
-      'Quantum computing qubit fidelity',
-    ],
+    results: <ResourcePreview>[],
+    recentSearches: <String>[],
     searchHistory: <SearchHistoryModel>[],
-    suggestions: <String>[
-      'Zero-knowledge proofs',
-      'Large Language Models (LLMs)',
-      'Genomics GRCh38',
-      'Quantum cryptography',
-      'Graph Neural Networks',
-    ],
+    suggestions: <String>[],
     status: SearchStatus.idle,
-    totalCount: 4,
+    totalCount: 0,
     hasMore: false,
   );
+
 
   SearchState copyWith({
     String? query,
@@ -198,15 +137,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
       final List<ResourcePreview> previews = items.map((SearchResultItem i) => i.toPreview()).toList();
 
-      // If local database had no seeded records matching, fallback to mock filtered items
-      final List<ResourcePreview> effectiveResults = previews.isNotEmpty
-          ? previews
-          : SearchState.defaultMockResults.where((ResourcePreview r) {
-              if (clean.isEmpty) return true;
-              final String q = clean.toLowerCase();
-              return r.title.toLowerCase().contains(q) ||
-                  r.authors.any((String a) => a.toLowerCase().contains(q));
-            }).toList();
+      final List<ResourcePreview> effectiveResults = previews;
 
       if (clean.isNotEmpty) {
         await _searchRepo.recordSearchQuery(clean, resultCount: effectiveResults.length);

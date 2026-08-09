@@ -5,7 +5,6 @@ import '../../../../core/managers/local_library_manager.dart';
 import '../../../../data/models/favorite_model.dart';
 import '../../../../data/models/resource_model.dart';
 import '../../../../shared/enums/resource_type.dart';
-import '../../../../shared/enums/verification_tier.dart';
 import '../../../../shared/models/resource_preview.dart';
 
 /// State of the local offline academic vault and storage telemetry.
@@ -13,8 +12,8 @@ class LibraryState {
   const LibraryState({
     required this.savedItems,
     required this.selectedTab,
-    this.capacityFraction = 0.14,
-    this.formattedUsage = '1.42 GB / 10.0 GB',
+    this.capacityFraction = 0.0,
+    this.formattedUsage = '0.00 GB / 10.0 GB',
     this.isLoading = false,
   });
 
@@ -25,22 +24,7 @@ class LibraryState {
   final bool isLoading;
 
   static const LibraryState initial = LibraryState(
-    savedItems: <ResourcePreview>[
-      ResourcePreview(
-        id: 'sv-res-001',
-        title: 'Decentralized Academic Storage: Zero-Knowledge Verification Networks',
-        authors: <String>['Dr. Elena Vance', 'Prof. Marcus Chen'],
-        year: 2026,
-        type: ResourceType.paper,
-        verificationTier: VerificationTier.verified,
-        sizeBytes: 14680064,
-        peerSeeders: 34,
-        cid: 'bafybeicg24pknox2zox7e22f254e2q3w5i6k7a8b9c0d1e2f3g4h5i6j7k',
-        institution: 'Global Academic Protocol Lab',
-        doi: '10.1038/s41586-026-04289-w',
-        isDownloaded: true,
-      ),
-    ],
+    savedItems: <ResourcePreview>[],
     selectedTab: null,
   );
 
@@ -79,27 +63,26 @@ class LibraryNotifier extends StateNotifier<LibraryState> {
       final double fraction = await _libraryManager.getVaultCapacityFraction();
       final String usage = await _libraryManager.getFormattedUsage();
 
-      final List<ResourcePreview> previews = models.isNotEmpty
-          ? models.map((ResourceModel m) => ResourcePreview(
-                id: m.id,
-                title: m.title,
-                authors: m.authors,
-                year: m.publicationYear ?? 2026,
-                type: m.type,
-                verificationTier: m.verificationTier,
-                sizeBytes: m.sizeBytes,
-                peerSeeders: m.peerSeeders,
-                cid: m.cid ?? '',
-                isDownloaded: m.isDownloaded,
-              )).toList()
-          : LibraryState.initial.savedItems;
+      final List<ResourcePreview> previews = models.map((ResourceModel m) => ResourcePreview(
+            id: m.id,
+            title: m.title,
+            authors: m.authors,
+            year: m.publicationYear ?? 2026,
+            type: m.type,
+            verificationTier: m.verificationTier,
+            sizeBytes: m.sizeBytes,
+            peerSeeders: m.peerSeeders,
+            cid: m.cid ?? '',
+            isDownloaded: m.isDownloaded,
+          )).toList();
 
       state = state.copyWith(
         savedItems: previews,
-        capacityFraction: fraction > 0 ? fraction : 0.14,
-        formattedUsage: usage.isNotEmpty ? usage : '1.42 GB / 10.0 GB',
+        capacityFraction: fraction,
+        formattedUsage: usage.isNotEmpty ? usage : '0.00 GB / 10.0 GB',
         isLoading: false,
       );
+
     } catch (_) {
       state = state.copyWith(isLoading: false);
     }
