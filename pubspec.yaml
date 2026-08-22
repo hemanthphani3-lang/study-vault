@@ -24,7 +24,7 @@ dependencies:
   drift_flutter: ^0.1.0
 
   # Typography & Design System
-  google_fonts: ^6.2.1
+  google_fonts: ^8.2.1
   flutter_svg: ^2.0.10+1
 
   # Icons & Utility
